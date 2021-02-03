@@ -1,73 +1,66 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">
-        catalog_books
-      </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
+  <div>
+    <h1>Home page</h1>
+    <hr>
+	  <div class="catalog__books">
+		  <book
+			  v-for="item in books"
+			  :key="item.id"
+			  :book-info="item"
+		  />
+	  </div>
   </div>
 </template>
 
 <script>
-export default {}
+import Book from '@/components/book.vue'
+import * as axios from 'axios'
+export default {
+	components: {
+		Book
+	},
+	async asyncData () {
+		// let books = [];
+		// await axios
+		// 	.get('https://www.respublica.ru/api/v1/listing/knigi?_page=1')
+		// 	.then(response => ({
+		// 		if (response) {
+		// 			console.log(response);
+		// 			books = response.items.data;
+		// 		}
+		// 	}))
+		// 	.catch(error => console.error(error));
+		// return {books}
+	},
+	data: () => ({
+		books: []
+	}),
+	mounted () {
+		this.getBooks()
+	},
+	methods: {
+		async getBooks () {
+			console.log('getBooks()', this._data, this.books)
+			await axios
+				.get('https://www.respublica.ru/api/v1/listing/knigi?_page=1')
+				.then((response) => {
+					console.log(response)
+					this.books = response.data.items.data
+					console.log(this.books)
+				})
+				.catch(error => console.error(error))
+		}
+	}
+}
 </script>
 
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
+<style scoped lang="scss">
+	hr {
+		margin: 2rem 0;
+	}
 
-.title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
+	.catalog__books {
+		display: flex;
+		float: left;
+	}
 </style>
