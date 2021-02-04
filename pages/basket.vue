@@ -1,12 +1,15 @@
 <template>
-  <div>
-    <h1>Basket page</h1>
+  <div class="basket">
+    <h1>Корзина</h1>
   </div>
 </template>
 
 <script>
 export default {
-	name: 'Basket'
+	name: 'Basket',
+	head: ()=>({
+		title: 'Р* Корзина'
+	})
 }
 </script>
 

@@ -1,0 +1,14 @@
+$material-icons-font-path: '~material-icons/iconfont/';
+@import '~material-icons/iconfont/material-icons.scss';
+@import "fonts/font.scss";
+
+$gray: #b9b9c2;
+$gray-dark: #2d384c;
+$blue: #4a85fb;
+$blue-dark: #273041;
+$main-color: #f7f8fa;
+
+@mixin main_font {
+	//@include font('RobotoSlab', 'RobotoSlab-Regular');
+	font-size: 16px;
+}

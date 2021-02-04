@@ -25,7 +25,7 @@ export default {
 	props: {
 		bookInfo: {
 			type: Object,
-			required: false,
+			required: true,
 			default () {
 				return {
 					type: 'null',
@@ -40,9 +40,15 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 	.book {
-		width: 25%;
+		width: calc((900px / 4) - 56px);
+		padding: 16px;
+		margin: 8px;
+		display: flex;
+		flex-flow: column;
+		align-items: center;
+		justify-content: start;
 
 		.book__img {
 			img {
@@ -50,9 +56,10 @@ export default {
 			}
 		}
 
-		.book_tools {
+		.book__tools {
+			width: 100%;
+			flex-flow: row;
 			display: flex;
-			align-items: center;
 			justify-content: space-between;
 		}
 	}
