@@ -1,13 +1,13 @@
 <template>
-	<div class="catalog">
-		<div class="catalog__books">
-			<book
-				v-for="item in books"
-				:key="item.id"
-				:book-info="item"
-			/>
-		</div>
-	</div>
+  <div class="catalog">
+    <div class="catalog__books">
+      <book
+        v-for="item in books"
+        :key="item.id"
+        :book-info="item"
+      />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -18,25 +18,25 @@ export default {
 		Book
 	},
 	async asyncData ({ $http }) {
-		let books = [];
-		console.log(books);
+		let books = []
+		console.log(books)
 		await axios
 			.get('https://www.respublica.ru/api/v1/listing/knigi?_page=1')
-			.then(response => {
-				console.log(response);
+			.then((response) => {
+				console.log(response)
 				if (response) {
-					books = response.data.items.data.slice(0, 6);
+					books = response.data.items.data.slice(0, 12)
 				}
 			})
-			.catch(error => console.error(error));
-		console.log(books);
-		return {books}
+			.catch(error => console.error(error))
+		console.log(books)
+		return { books }
 	},
-	head: ()=>({
-		title: `R° Каталог`
-	}),
 	data: () => ({
 		books: []
+	}),
+	head: () => ({
+		title: 'R° Каталог'
 	}),
 	mounted () {
 		// this.getBooks()
@@ -61,6 +61,7 @@ export default {
 	.catalog{
 
 	}
+
 	.catalog__books {
 		display: flex;
 		flex-flow: wrap;

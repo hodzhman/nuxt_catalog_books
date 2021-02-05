@@ -19,7 +19,7 @@ export default {
 	},
 
 	loading: {
-		color: 'blue'
+		color: '#4a85fb'
 	},
 
 	// Global CSS: https://go.nuxtjs.dev/config-css
@@ -36,9 +36,9 @@ export default {
 	// Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
 	buildModules: [
 		// https://go.nuxtjs.dev/eslint
-		'@nuxtjs/eslint-module',
+		// '@nuxtjs/eslint-module',
 		// https://go.nuxtjs.dev/stylelint
-		'@nuxtjs/stylelint-module'
+		// '@nuxtjs/stylelint-module'
 	],
 
 	// Modules: https://go.nuxtjs.dev/config-modules
@@ -55,6 +55,12 @@ export default {
 	},
 
 	router: {
-
+		extendRoutes(routes, resolve) {
+			routes.push({
+				name: 'about_book',
+				path: '/about/about_book/:sku',
+				component: resolve(__dirname, 'pages/about/AboutBook.vue')
+			})
+		}
 	}
 }

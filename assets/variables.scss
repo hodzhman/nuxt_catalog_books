@@ -11,4 +11,42 @@ $main-color: #f7f8fa;
 @mixin main_font {
 	//@include font('RobotoSlab', 'RobotoSlab-Regular');
 	font-size: 16px;
+	font-weight: normal;
+	line-height: normal;
+	color: $blue-dark;
+}
+
+@mixin position($pos){
+	-webkit-position: $pos;
+	-moz-position: $pos;
+	-ms-position: $pos;
+	-o-position: $pos;
+	position: $pos;
+}
+
+@mixin scrollbars($size, $foreground-color, $background-color: mix($foreground-color, white,  50%)) {
+
+	// For Firefox
+	scrollbar-width: thin;
+	scrollbar-color: $background-color $foreground-color;
+
+	// For Google Chrome
+	&::-webkit-scrollbar {
+		width: $size;
+		height: $size;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: $foreground-color;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: $background-color;
+	}
+
+	// For Internet Explorer
+	& {
+		scrollbar-face-color: $foreground-color;
+		scrollbar-track-color: $background-color;
+	}
 }
