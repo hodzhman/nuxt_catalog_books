@@ -10,7 +10,9 @@
 		  >
 			  <div class="basket-elem__image">
 				  <img
-					  :src="'https://www.respublica.ru/'+book.image"
+					  class="basket-elem__img"
+					  :src="book.image"
+					  :alt="book.title"
 				  >
 			  </div>
 			  <div class="basket-elem__info">
@@ -22,9 +24,6 @@
 				  </div>
 			  </div>
 			  <div class="basket-elem__tools">
-				  <div class="basket-elem__price">
-					  {{book.price}} <span>&#8381;</span>
-				  </div>
 				  <div class="basket-elem__tools-control">
 					  <button class="btn-control"
 							  @click="book_dec(book.id)"
@@ -39,6 +38,9 @@
 					  >
 						  <span class="material-icons">add</span>
 					  </button>
+				  </div>
+				  <div class="basket-elem__price">
+					  {{book.price}} <span>&#8381;</span>
 				  </div>
 				  <div class="basket-elem__remove">
 					  <button class="btn-control"
@@ -101,27 +103,114 @@ export default {
 
 <style scoped lang="scss">
 	@import '@/assets/variables.scss';
+
+	button{
+		background: transparent;
+		padding: 0;
+		margin: 0;
+		border-width: 1px;
+		border: none;
+		width: 30px;
+		cursor: pointer;
+		&:focus{
+			outline: none;
+			border: none;
+		}
+		.material-icons{
+			line-height: 28px;
+		}
+	}
+
+
+
 	.basket-elem{
+		height: 200px;
 		padding: 8px;
 		margin: 16px 0;
 		display: flex;
 		align-items: center;
 		flex-direction: row;
+
 		.basket-elem__image{
-			width: 15%;
+			width: 20%;
+			height: 100%;
+			padding: 8px;
+			margin: 0 8px 0 0;
+			box-sizing: border-box;
+			text-align: center;
+			display: flex;
+			.basket-elem__img{
+				max-height: 100%;
+				max-width: 100%;
+				margin: auto;
+			}
 		}
+
 		.basket-elem__info{
-			width: 45%;
+			width: 50%;
+			padding: 8px 16px;
+			.basket-elem__title{
+				@include main_font();
+				font-size: 24px;
+				margin-bottom: 8px;
+			}
+			.basket-elem__author{
+				@include main_font();
+				font-size: 18px;
+				margin-bottom: 8px;
+				color: $blue;
+			}
 		}
 		.basket-elem__tools{
-			width: 40%;
+			width: 30%;
+			height: 100%;
 			justify-content: flex-end;
+			padding: 8px 0;
+			.basket-elem__tools-control{
+				width: 100px;
+				height: 28px;
+				display: flex;
+				align-items: center;
+				justify-content: space-evenly;
+				.btn-control{
+					outline: none;
+					border: none;
+				}
+			}
+			.basket-elem__price{
+				@include main_font();
+				font-size: 24px;
+				line-height: 28px;
+				margin: 0 8px;
+			}
+			.basket-elem__count{
+				font-size: 18px;
+				width: 40%;
+				height: 100%;
+				text-align: center;
+				background: $gray-light;
+			}
+			.basket-elem__remove{
+				height: 28px;
+				width: 28px;
+				border-radius: 50%;
+				border: 1px solid $blue-dark;
+				outline: none;
+				/*top: -80px;*/
+				/*right: 0;*/
+				/*position: relative;*/
+				.btn-control{
+					width: 100%;
+					height: 100%;
+				}
+			}
 		}
 		.basket-elem__tools,
 		.basket-elem__tools-control{
 			display: flex;
 			align-items: center;
 			flex-direction: row;
+			justify-content: space-between;
 		}
 	}
 </style>

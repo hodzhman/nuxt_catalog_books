@@ -13,7 +13,7 @@
 
 export const state = () => ({
 	counter: 0,
-	all_books: []
+	all_books: [{"id":400505,"title":"А я тебя «нет»","author":"Джиа Джианг","image":"https://www.respublica.ru//uploads/00/00/00/e2/cw/fd38c524b77db133.jpg","price":450,"count":1},{"id":400500,"title":"Мой сосед ХАЯО. Артбук по мотивам творчества МИЯДЗАКИ","author":"Комильфо","image":"https://www.respublica.ru//uploads/00/00/00/e2/cq/e49820a5f5ca3a68.jpg","price":2090,"count":2}]
 });
 
 export const mutations = {

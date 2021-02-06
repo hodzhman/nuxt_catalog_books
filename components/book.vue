@@ -3,6 +3,7 @@
     <div class="book__img">
       <img @click="$router.push({name: 'about_book', params: {sku: bookInfo.attributes.sku}})"
 		   :src="'https://www.respublica.ru/'+bookInfo.attributes.image.media.url"
+		   :alt="bookInfo.attributes.title"
 	  >
     </div>
 
@@ -70,14 +71,14 @@ export default {
 	},
 	methods: {
 		add_to_basket(){
-			let book = {
-				id: this.bookInfo.id,
-				title: this.bookInfo.attributes.title,
-				author: this.author,
-				image: this.bookInfo.attributes.image.media.url,
-				price: this.bookInfo.attributes.price,
-			};
-			this.$store.commit('basket/add_book', book);
+			// let book = {
+			// 	id: this.bookInfo.id,
+			// 	title: this.bookInfo.attributes.title,
+			// 	author: this.author,
+			// 	image: this.bookInfo.attributes.image.media.url,
+			// 	price: this.bookInfo.attributes.price,
+			// };
+			// this.$store.commit('basket/add_book', book);
 		}
 	}
 }

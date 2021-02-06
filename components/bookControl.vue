@@ -48,7 +48,7 @@
 			},
 			attr: {
         		type: Object,
-				required: false
+				required: true
 			},
 			flagChangeView: {
         		type: Boolean,
@@ -83,12 +83,12 @@
         		// добавить книгу в корзину
         		let author = (this.attr.manufacturer.title) ? this.attr.manufacturer.title : '',
 					item = {
-					id: this.id,
-					title: this.attr.title,
-					author: author,
-					image: "item.image",
-					price: this.attr.price,
-				};
+						id: this.id,
+						title: this.attr.title,
+						author: author,
+						image: ('https://www.respublica.ru/'+this.attr.image.media.url),
+						price: this.attr.price,
+					};
         		this.$store.commit('basket/add_book', item);
 			},
 			book_inc(){
