@@ -1,27 +1,37 @@
 <template>
-    <div class="control">
-		{{count_book}}
+    <div
+		class="control"
+		:class="block ? 'control_full-width' : ''"
+	>
 		<template v-if="view_btn_add">
-			<button
-				@click="add_to_basket"
-			>В корзину</button>
-		</template>
-		<template v-else>
 			<div class="container">
 				<div class="control__count">
 					<button
+						class="control__btn"
+						:class="count_book === 0 ? 'control__btn_disabled' : ''"
 						@click="book_dec"
-					>-</button>
+					>
+						<span class="material-icons">remove</span>
+					</button>
 				</div>
 				<div class="control__label">
 					{{count_book}}
 				</div>
 				<div class="control__count">
 					<button
+						class="control__btn"
 						@click="book_inc"
-					>+</button>
+					>
+						<span class="material-icons">add</span>
+					</button>
 				</div>
 			</div>
+		</template>
+		<template v-else>
+			<button
+				class="control__btn control__btn_block control__btn-basket"
+				@click="add_to_basket"
+			>В корзину</button>
 		</template>
 	</div>
 </template>
@@ -33,7 +43,7 @@
         name: "book-control",
 		props: {
         	id: {
-        		type: String,
+        		type: Number,
 				required: true
 			},
 			attr: {
@@ -44,7 +54,14 @@
         		type: Boolean,
 				required: false,
 				default(){
-        			return true
+        			return false
+				}
+			},
+			block: {
+        		type: Boolean,
+				required: false,
+				default(){
+        			return false
 				}
 			}
 		},
@@ -53,23 +70,20 @@
 		}),
 		computed:{
         	view_btn_add(){
-        		let flag = true;
-
-        		return true;
+                // console.log('view_btn_add', this.flagChangeView, this.$store.getters['basket/getBasketCountById'](this.id));
+                // console.log( (this.flagChangeView && this.$store.getters['basket/getBasketCountById'](this.id) > 0));
+        		return (this.flagChangeView && this.$store.getters['basket/getBasketCountById'](this.id) > 0);
 			},
-			...mapGetters({
-				count_book: ['basket/getBasketCountById'](this.id)
-			}),
-			// count_book(){
-        		// this.$store.getters.basket.getBasketCountById(this.id)
-			// },
+			count_book(){
+        		return this.$store.getters['basket/getBasketCountById'](this.id);
+			}
 		},
 		methods: {
         	add_to_basket(){
         		// добавить книгу в корзину
         		let author = (this.attr.manufacturer.title) ? this.attr.manufacturer.title : '',
 					item = {
-					id: String(this.id),
+					id: this.id,
 					title: this.attr.title,
 					author: author,
 					image: "item.image",
@@ -87,8 +101,53 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+	@import "@/assets/variables.scss";
+
+	.control__btn{
+		border: none;
+		background: transparent;
+		padding: 0px;
+		margin: 0px;
+		cursor: pointer;
+		min-width: 32px;
+		min-height: 28px;
+		&:focus{
+			outline: none;
+		}
+		&.control__btn_disabled{
+			cursor: not-allowed;
+			pointer-events: none;
+		}
+		&.control__btn_block{
+			width: 100%;
+		}
+	}
 	.control{
 		border: 1px solid black;
+		border-radius: 4px;
+		background: $blue-dark;
+		width: 116px;
+		padding: 4px;
+		*{
+			color: $main-color;
+		}
+		*:hover:not(.control__label){
+			color: $gray;
+		}
+		&.control_full-width{
+			width: 100%;
+		}
+		.container{
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			.control__btn{
+				display: flex;
+				.material-icons{
+					margin: auto;
+				}
+			}
+		}
 	}
 </style>

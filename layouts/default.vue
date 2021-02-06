@@ -52,7 +52,7 @@
 			margin: auto;
 			padding: 24px;
 			width: 100%;
-			max-width: 900px;
+			max-width: $container-width;
 		}
 	}
 </style>

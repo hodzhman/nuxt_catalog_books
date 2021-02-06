@@ -31,12 +31,10 @@
         {{ bookInfo.attributes.price }} <template v-if="bookInfo.attributes.price">&#8381;</template>
       </div>
       <div class="book__add-basket add-basket">
-        <button
-          class="add-basket__btn"
-		  @click="add_to_basket"
-        >
-          В корзину
-        </button>
+		  <book-control
+			  :id="bookInfo.attributes.id"
+			  :attr="bookInfo.attributes"
+		  ></book-control>
       </div>
     </div>
   </div>
@@ -44,8 +42,12 @@
 
 <script>
 	import { mapMutation } from 'vuex'
+	import BookControl from '@/components/bookControl.vue'
 export default {
 	name: 'Book',
+	components:{
+		BookControl
+	},
 	props: {
 		bookInfo: {
 			type: Object,
@@ -76,9 +78,6 @@ export default {
 				price: this.bookInfo.attributes.price,
 			};
 			this.$store.commit('basket/add_book', book);
-
-			// случай ниже не работает!
-			// this.$store.commit.basket.add_book(book);
 		}
 	}
 }
@@ -87,7 +86,7 @@ export default {
 <style lang="scss">
 	@import '@/assets/variables.scss';
 	.book {
-		width: calc((900px / 4) - 56px);
+		width: (($container-width / 4) - 48px);
 		padding: 16px;
 		margin: 8px;
 		display: flex;
@@ -124,6 +123,7 @@ export default {
 			flex-flow: row;
 			display: flex;
 			justify-content: space-between;
+			align-items: flex-end;
 			.book__add-basket *{
 				cursor: pointer;
 				border-radius: 4px;

@@ -8,6 +8,8 @@ $blue: #4a85fb;
 $blue-dark: #273041;
 $main-color: #f7f8fa;
 
+$container-width: 960px;
+
 @mixin main_font {
 	//@include font('RobotoSlab', 'RobotoSlab-Regular');
 	font-size: 16px;

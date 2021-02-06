@@ -15,25 +15,11 @@
 					<div class="book-info__price">
 						{{bookInfo.attributes.price}} <template v-if="bookInfo.attributes.price">&#8381;</template>
 					</div>
-					<div class="book-info__control-count">
-						<book-control
-							:id="bookInfo.attributes.id"
-							:attr="bookInfo.attributes"
-							:flagChangeView="true"
-						></book-control>
-						<div
-							@click="test"
-						>В корзину</div>
-						<div
-							@click="test"
-						>-</div>
-						<div>
-							<!--{{count}}-->
-						</div>
-						<div
-							@click="test2"
-						>+</div>
-					</div>
+					<book-control
+						:id="bookInfo.attributes.id"
+						:attr="bookInfo.attributes"
+						flagChangeView
+					></book-control>
 				</div>
 				<div class="book-info__properties">
 					<div
@@ -97,10 +83,6 @@
 			imageBook: null
 		}),
 		methods:{
-			...mapMutations({
-				// 'add_one_book': ['basket/add_one_book'],
-				// 'remove_one_book': ['basket/remove_book'],
-			}),
 			test(){
 				this.$store.commit('basket/add_book', {
 					id: this.bookInfo.attributes.id,
@@ -133,17 +115,7 @@
 					});
 				}
 				return result;
-			},
-			// count(){
-			// 	return this.$store.getters.basket.getBasketCountById(this.bookInfo.id)
-			// 	return this.$store.getters[`basket/getBasketCountById(${this.bookInfo.id || 0})`]
-			// },
-			// ...mapGetters({
-			// 	count: [`basket/getBasketCountById(${this.bookInfo.id})`]
-			// }),
-			// count(){
-			// 	this.$store.getters.basket.getBasketCountById(this.bookInfo.id);
-			// }
+			}
 		}
     }
 </script>

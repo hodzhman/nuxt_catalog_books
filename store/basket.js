@@ -22,13 +22,12 @@ export const mutations = {
 	},
 	add_book(state, item){
 		// добавить одну книгу в корзину, если есть, то +1
-		let book = state.all_books.find(x => x.id === String(item.id));
+		let book = state.all_books.find(x => x.id === +item.id);
 		if(book !== undefined){
 			book.count++;
-			// this.add_one_book(state, item.id)
 		} else {
 			state.all_books.push({
-				id: String(item.id),
+				id: +item.id,
 				title: item.title,
 				author: item.author,
 				image: item.image,
@@ -40,7 +39,7 @@ export const mutations = {
 	add_one_book(state, id){
 		// добавить ещё одну книгу в корзину
 		// увеличить количество на 1
-		let book = state.all_books.find(x => x.id === String(id));
+		let book = state.all_books.find(x => x.id === +id);
 		if(book !== undefined){
 			book.count++;
 		} else {
@@ -54,7 +53,7 @@ export const mutations = {
 		if(book !== undefined){
 			book.count--;
 			if(book.count <= 0){
-				// this.remove_book(state, id);
+				state.all_books = state.all_books.filter(x => x.id !== +id);
 			}
 		} else {
 			console.error("basket.store mutation remove_one_book")
@@ -87,7 +86,6 @@ export const getters = {
 		return state.all_books.length;
 	},
 	getBasketCountById: state => id => {
-		console.log('getBasketCountById ',+id);
 		let book = state.all_books.find(x => x.id === +id);
 		if(book !== undefined){
 			return book.count;
@@ -96,6 +94,3 @@ export const getters = {
 	}
 };
 
-export const actions = {
-
-};
