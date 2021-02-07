@@ -48,7 +48,7 @@
 </template>
 
 <script>
-	import BookControl from '@/components/bookControl.vue'
+	import BookControl from '@/components/bookControl'
 	import * as axios from 'axios';
 	import { mapGetters } from 'vuex';
 	import { mapMutations } from 'vuex';

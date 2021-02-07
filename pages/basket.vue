@@ -1,7 +1,15 @@
 <template>
   <div class="basket">
 	  <template v-if="all_books.length === 0">
-		  <h2>Корзина пуста!</h2>
+		  <div class="basket-empty">
+			  <div
+				  class="basket-empty__title"
+			  >Корзина пуста</div>
+			  <nuxt-link to="/"
+						 tag="button"
+				  class="basket__btn basket-empty__btn"
+			  >В каталог</nuxt-link>
+		  </div>
 	  </template>
 	  <template v-else>
 		  <div class="basket-elem"
@@ -44,17 +52,88 @@
 				  </div>
 				  <div class="basket-elem__remove">
 					  <button class="btn-control"
-							  @click="book_remove(book.id)"
+							  @click="modal_remove_open(book.id)"
 					  >
 						  <span class="material-icons">clear</span>
 					  </button>
 				  </div>
 			  </div>
 		  </div>
-		  <div class="basket-info__sum-total">
-			  Общая стоимость: <span class="basket-info__sum-value">{{sum_total}} &#8381; </span>
+		  <div class="basket-footer">
+			  <div class="basket-footer__clean-basket">
+				  <button class="basket__btn btn-clean"
+						  @click="modal_clearbasket_view = true"
+				  >Очистить корзину</button>
+			  </div>
+			  <div class="basket-footer__sum-total">
+				  Общая стоимость: <span class="basket-footer__sum-value">{{sum_total}} &#8381;</span>
+			  </div>
 		  </div>
 
+		  <modal-confirm
+			  v-model="modal_remove_view"
+			  class="modal-remove"
+		  >
+			  <template v-slot:head>
+				  <span>Вы действительно хотите удалить товар из корзины?</span>
+			  </template>
+			  <template v-slot:body>
+				  <div class="basket-elem">
+					  <div class="basket-elem__image">
+						  <img
+							  class="basket-elem__img"
+							  :src="modal_remove_item.image"
+							  :alt="modal_remove_item.title"
+						  >
+					  </div>
+					  <div class="basket-elem__info">
+						  <div class="basket-elem__title modal-remove__title">
+							  {{modal_remove_item.title}}
+						  </div>
+						  <div class="basket-elem__author modal-remove__author">
+							  {{modal_remove_item.author}}
+						  </div>
+					  </div>
+				  </div>
+			  </template>
+			  <template v-slot:actions>
+				  <button
+					  class="modal-btn basket__btn"
+					  @click="modal_remove_close"
+				  >
+					  <span class="material-icons">clear</span>
+				  </button>
+				  <button
+					  class="modal-btn basket__btn"
+					  @click="modal_remove_accept"
+				  >
+					  <span class="material-icons">done</span>
+				  </button>
+			  </template>
+		  </modal-confirm>
+
+		  <modal-confirm
+			  v-model="modal_clearbasket_view"
+			  class="modal-clearbasket"
+		  >
+			  <template v-slot:head>
+				  <span>Вы действительно хотите очистить корзину?</span>
+			  </template>
+			  <template v-slot:actions>
+				  <button
+					  class="modal-btn basket__btn"
+					  @click="modal_clear_close"
+				  >
+					  <span class="material-icons">clear</span>
+				  </button>
+				  <button
+					  class="modal-btn basket__btn"
+					  @click="modal_clear_accept"
+				  >
+					  <span class="material-icons">done</span>
+				  </button>
+			  </template>
+		  </modal-confirm>
 
 	  </template>
   </div>
@@ -63,14 +142,26 @@
 <script>
 import { mapMutations } from 'vuex'
 import { mapGetters } from 'vuex'
-import BookControl from '@/components/bookControl.vue'
+import BookControl from '../components/bookControl'
+import ModalConfirm from "../components/modalConfirm";
 export default {
 	name: 'Basket',
 	head: () => ({
 		title: 'Р* Корзина'
 	}),
+	data: ()=>({
+		modal_remove_view: false,
+		modal_remove_item: {
+			id: -1,
+			image: '',
+			title: '',
+			author: ''
+		},
+		modal_clearbasket_view: false,
+	}),
 	components:{
-		BookControl
+		ModalConfirm,
+		BookControl,
 	},
 	computed: {
 		...mapGetters({
@@ -92,19 +183,78 @@ export default {
 			this.$store.commit('basket/add_one_book', id);
 		},
 		book_dec(id){
-			this.$store.commit('basket/remove_one_book', id);
+			let count = this.$store.getters['basket/getBasketCountById'](id);
+			if(count > 1){
+				this.$store.commit('basket/remove_one_book', id);
+			} else {
+				this.modal_remove_open(id);
+			}
 		},
 		book_remove(id){
 			this.$store.commit('basket/remove_book', id);
+		},
+
+		modal_remove_open(id){
+			if(parseInt(id) > 0){
+				let book = this.all_books.find(x => x.id === parseInt(id));
+				this.modal_remove_item.id = id;
+				this.modal_remove_item.title = book.title;
+				this.modal_remove_item.author = book.author;
+				this.modal_remove_item.image = book.image;
+				this.modal_remove_view = true;
+			}
+		},
+		modal_remove_close(){
+			this.modal_remove_view = false;
+		},
+		modal_remove_accept(){
+			this.book_remove(this.modal_remove_item.id);
+			this.modal_remove_close();
+		},
+
+		modal_clear_close(){
+			this.modal_clearbasket_view = false;
+		},
+		modal_clear_accept(){
+			this.$store.commit('basket/clean_basket');
+			this.modal_clear_close();
+
+			// вернуться в каталог для выбора товара
+			// setTimeout(()=>{
+			// 	this.$router.push('/');
+			// }, 1500)
+
 		}
 	}
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 	@import '@/assets/variables.scss';
 
-	button{
+	/*для всех кнопок в корзине ("в каталог", "очистить корзину")*/
+	.basket .basket__btn{
+		cursor: pointer;
+		min-width: 32px;
+		min-height: 28px;
+		border: none;
+		border-radius: 4px;
+		background: $blue-dark;
+		color: $main-color;
+		width: 116px;
+		padding: 4px 8px;
+		box-sizing: unset;
+		&:focus{
+			outline: none;
+		}
+		&:hover{
+			color: $gray;
+		}
+	}
+
+	/*для кнопок управления*/
+	/*добавить убалить удалить книгу*/
+	.basket button:not(.btn-clean):not(.basket-empty__btn):not(.basket__btn){
 		background: transparent;
 		padding: 0;
 		margin: 0;
@@ -121,8 +271,21 @@ export default {
 		}
 	}
 
+	/*шаблон пустая корзина*/
+	.basket-empty{
+		width: 100%;
+		text-align: center;
+		margin: 32px;
+		.basket-empty__title{
+			@include main_font;
+			font-size: 28px;
+		}
+		.basket-empty__btn{
+			margin-top: 16px;
+		}
+	}
 
-
+	/*для элементов корзины*/
 	.basket-elem{
 		height: 200px;
 		padding: 8px;
@@ -196,9 +359,6 @@ export default {
 				border-radius: 50%;
 				border: 1px solid $blue-dark;
 				outline: none;
-				/*top: -80px;*/
-				/*right: 0;*/
-				/*position: relative;*/
 				.btn-control{
 					width: 100%;
 					height: 100%;
@@ -213,4 +373,60 @@ export default {
 			justify-content: space-between;
 		}
 	}
+
+	/*блок с кнопкой "очистить корзину" и сумма корзины*/
+	.basket-footer{
+		padding: 8px;
+		margin-top: 16px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		.basket-footer__sum-total{
+			@include main_font;
+			font-size: 18px;
+			.basket-footer__sum-value{
+				color: $blue;
+			}
+		}
+	}
+
+	/*для модалки подтверждения удаления товара*/
+	.modal-confirm{
+		.basket-elem{
+			min-height: 100px;
+			height: unset;
+			margin: 0;
+			padding: 0;
+			.basket-elem__info{
+				width: 70%;
+			}
+			*{
+				font-size: 14px!important;
+			}
+		}
+		.modal-btn{
+			width: 35px;
+			height: 35px;
+			border-radius: 4px;
+			background: transparent;
+			color: $blue-dark;
+			padding: 4px;
+			.material-icons{
+				font-size: 26px;
+				line-height: 35px;
+			}
+			&:hover{
+				background: $gray-light;
+				color: $blue-dark;
+			}
+		}
+	}
+
+	/*для модалки подтверждения очистки корзины*/
+	.modal-clearbasket{
+		.modal__head{
+			text-align: center;
+		}
+	}
+
 </style>

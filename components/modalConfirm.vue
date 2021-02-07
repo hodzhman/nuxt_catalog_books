@@ -1,0 +1,89 @@
+<template>
+    <div class="modal-confirm"
+		 :class="value ? 'modal-active' : ''"
+	>
+		<div class="modal-wrapper">
+			<div class="modal-container modal">
+				<div class="modal__head">
+					<slot name="head"></slot>
+				</div>
+				<div class="modal__body">
+					<slot name="body"></slot>
+				</div>
+				<div class="modal__actions">
+					<slot name="actions"></slot>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script>
+    export default {
+        name: "modal-confirm",
+		props: {
+        	value: {
+        		type: Boolean,
+				required: true,
+				default() {
+        			return false;
+				}
+			}
+		}
+    }
+</script>
+
+<style scoped lang="scss">
+	@import '@/assets/variables.scss';
+
+	.modal-confirm {
+		position: fixed;
+		z-index: 9998;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.5);
+		display: none;
+		transition: opacity 0.3s ease;
+		&.modal-active{
+			display: table;
+		}
+		.modal-wrapper {
+			display: table-cell;
+			vertical-align: middle;
+			.modal-container {
+				min-width: 300px;
+				background-color: #fff;
+				transition: all 0.3s ease;
+			}
+		}
+	}
+
+	.modal{
+		width: 500px;
+		margin: auto;
+		border-radius: 4px;
+		padding: 16px;
+		border: none;
+		box-sizing: border-box;
+		@include main_font;
+		.modal__head,
+		.modal__body{
+			padding: 0 0 8px 0;
+		}
+		.modal__head{
+			//@include main_font;
+			font-size: 18px;
+		}
+		.modal__body{
+			//@include main_font;
+		}
+		.modal__actions{
+			display: flex;
+			align-items: center;
+			justify-content: space-evenly;
+		}
+	}
+
+</style>
