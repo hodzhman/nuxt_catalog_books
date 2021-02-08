@@ -1,10 +1,15 @@
 <template>
   <div class="book">
     <div class="book__img">
-      <img @click="$router.push({name: 'about_book', params: {sku: bookInfo.attributes.sku}})"
-		   :src="'https://www.respublica.ru/'+bookInfo.attributes.image.media.url"
-		   :alt="bookInfo.attributes.title"
-	  >
+		<nuxt-link
+			class="book__img-link"
+			:to="{name: 'about_book', params: {sku: bookInfo.attributes.sku}}"
+			tag="a"
+		>
+			<img :src="'https://www.respublica.ru/'+bookInfo.attributes.image.media.url"
+				 :alt="bookInfo.attributes.title"
+			>
+		</nuxt-link>
     </div>
 
 	  <div class="photo" v-if="false">
@@ -18,12 +23,13 @@
 		  </div>
 	  </div>
 
-
-    <div class="book__title"
-		 @click="$router.push({name: 'about_book', params: {sku: bookInfo.attributes.sku}})"
+    <nuxt-link
+		class="book__title"
+		tag="a"
+		:to="{name:'about_book', params: {sku: bookInfo.attributes.sku}}"
 	>
       {{ bookInfo.attributes.title }}
-    </div>
+    </nuxt-link>
     <div class="book__author">
       {{ author }}
     </div>
@@ -87,21 +93,35 @@ export default {
 <style lang="scss">
 	@import '@/assets/variables.scss';
 	.book {
-		width: (($container-width / 4) - 48px);
+		width: (($container-width / 4) - 16 - 32);
 		padding: 16px;
 		margin: 8px;
+		margin-bottom: 16px;
 		display: flex;
-		position: static;
 		flex-flow: column;
-		align-items: center;
 		align-items: start;
 		justify-content: start;
+		/*height: 400px;*/
+		box-sizing: content-box;
+		@include position(relative);
 
 		.book__img {
 			cursor: pointer;
+			height: 250px;
+			width: 100%;
+			display: flex;
+			padding: 8px;
+			box-sizing: border-box;
+			.book__img-link{
+				height: 100%;
+				text-decoration: none;
+				margin: auto;
+			}
 			img {
-				width: 200px;
+				max-height: 100%;
+				max-width: 100%;
 				border-radius: 4px;
+				margin: auto;
 				&:hover{
 					box-shadow: 0 0 5px 0px #0000008a;
 				}
@@ -111,20 +131,33 @@ export default {
 		.book__title{
 			cursor: pointer;
 			@include main_font();
+			text-decoration: none;
 		}
 
 		.book__author{
 			@include main_font();
 			color: $blue;
 			font-size: 12px;
+			margin-bottom: 32px;
 		}
 
 		.book__tools {
-			width: 100%;
+			width: calc(100% - 32px);
 			flex-flow: row;
 			display: flex;
 			justify-content: space-between;
 			align-items: flex-end;
+			margin-top: 8px;
+			position: absolute;
+			bottom: 0;
+			.book__price{
+				@include main_font();
+				font-size: 18px;
+				line-height: 38px;
+			}
+			.book__add-basket .control{
+				width: 100px;
+			}
 			.book__add-basket *{
 				cursor: pointer;
 				border-radius: 4px;
@@ -133,12 +166,12 @@ export default {
 	}
 
 	.photo{
-		position: static;
+		@include position(static);
 		z-index: 1;
 		padding-top: 100%;
 		margin-bottom: 1rem;
 		.photo-wrapper{
-			position: absolute;
+			@include position(absolute);
 			top: 0;
 			left: 0;
 			width: 100%;

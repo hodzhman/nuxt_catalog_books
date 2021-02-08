@@ -37,7 +37,7 @@
 	@import '@/assets/variables.scss';
 
 	.modal-confirm {
-		position: fixed;
+		@include position(fixed);
 		z-index: 9998;
 		top: 0;
 		left: 0;
@@ -73,11 +73,7 @@
 			padding: 0 0 8px 0;
 		}
 		.modal__head{
-			//@include main_font;
 			font-size: 18px;
-		}
-		.modal__body{
-			//@include main_font;
 		}
 		.modal__actions{
 			display: flex;

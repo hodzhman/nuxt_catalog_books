@@ -63,7 +63,7 @@
 		justify-content: center;
 		left: 0;
 		pointer-events: none;
-		position: fixed;
+		@include position(fixed);
 		top: 0;
 		transition: 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
 		width: 100%;

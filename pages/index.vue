@@ -25,7 +25,7 @@ export default {
 			.then((response) => {
 				console.log(response)
 				if (response) {
-					books = response.data.items.data.slice(0, 12)
+					books = response.data.items.data;
 				}
 			})
 			.catch(error => console.error(error))

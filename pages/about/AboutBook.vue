@@ -1,8 +1,13 @@
 <template>
 	<div class="about-book">
 		<div class="about-book__top">
-			<div class="about-book__img image-slider">
-				div с главным изображением и слайдер
+			<div class="about-book__image-container image-slider">
+				<img
+					class="about-book__image"
+					:src="'https://www.respublica.ru/'+bookInfo.attributes.image.media.url"
+					:alt="bookInfo.attributes.title"
+					width="100%"
+				>
 			</div>
 			<div class="about-book__info book-info">
 				<div class="book-info__title">
@@ -34,14 +39,16 @@
 			</div>
 		</div>
 		<div class="about-book__bottom">
-			<div
-				class="about-book__description"
-				v-html="bookInfo.attributes.description"
-			>
-				{{bookInfo.attributes.description}}
+			<div class="about-book__decription">
+				<div class="about-book__decription-title">
+					Описание
+				</div>
+				<div class="about-book__decription-info"
+					 v-html="bookInfo.attributes.description"
+				></div>
 			</div>
-			<div class="about-book__other-books">
-				другие книги
+			<div class="about-book__other-books" v-if="false">
+				<!-- TODO: другие книги-->
 			</div>
 		</div>
 	</div>
@@ -58,6 +65,7 @@
         	BookControl
 		},
 		async asyncData({$http, params}){
+        	//TODO: если не правильный SKU книги то ошибка запроса!!! добавить страницу "товар не найден" или запрос вынести в beforeMount
         	let bookInfo = {},
 				imageBook = {},
 				sku = params.sku;
@@ -83,19 +91,7 @@
 			imageBook: null
 		}),
 		methods:{
-			test(){
-				this.$store.commit('basket/add_book', {
-					id: this.bookInfo.attributes.id,
-					title: this.bookInfo.attributes.title,
-					author: this.bookInfo.attributes.manufacturer.title,
-					image: '-',
-					price: this.bookInfo.attributes.price,
-					count: 1
-				});
-			},
-			test2(){
-				this.$store.commit('basket/add_one_book', this.bookInfo.attributes.id)
-			}
+
 		},
 		computed:{
 			author() {
@@ -123,22 +119,49 @@
 <style scoped lang="scss">
 	@import '~assets/variables.scss';
 	.about-book{
-
+		margin-bottom: 32px;
 		.about-book__top{
 			display: flex;
 			flex-direction: row;
 			margin-bottom: 32px;
 
-			.about-book__img{
-				width: 60%;
+			.about-book__image-container,
+			.about-book__info{
+				width: 480px;
+				padding: 32px;
+				box-sizing: border-box;
+			}
+
+			.about-book__image-container{
+				display: inherit;
+				.about-book__image{
+					max-width: 280px;
+					margin: auto;
+				}
 			}
 			.about-book__info{
-
+				margin-left: 16px;
+			}
+		}
+		.about-book__bottom{
+			*{
+				@include main_font;
+			}
+			.about-book__decription-title{
+				//@include main_font();
+				font-size: 28px;
+				margin-bottom: 8px;
+				border-bottom: 1px solid $gray;
 			}
 		}
 	}
 
 	.book-info{
+		.book-info__title,
+		.book-info__author,
+		.book-info__tools{
+			margin-bottom: 8px;
+		}
 		.book-info__title{
 			@include main_font();
 			font-size: 32px;
@@ -151,12 +174,19 @@
 		.book-info__tools{
 			display: flex;
 			flex-direction: row;
-			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 16px;
+			.book-info__price{
+				@include main_font();
+				font-size: 28px;
+				margin-right: 16px;
+			}
 		}
 		.book-info__properties{
 
 			.book-info__property{
-				margin: 5px 0;
+				width: 100%;
+				margin: 8px 0;
 				display: flex;
 				flex-direction: row;
 				@include main_font();
@@ -164,6 +194,8 @@
 				.book-info__property-title{
 					color: $gray;
 					font-size: 14px;
+					margin-right: 8px;
+					width: 45%;
 				}
 				.book-info__property-value{
 					font-size: 16px;

@@ -1,7 +1,7 @@
 <template>
     <div
 		class="control"
-		:class="block ? 'control_full-width' : ''"
+		:class="[block ? 'control_full-width' : '', view_btn_add ? 'control_control-count' : 'control_control-to-basket']"
 	>
 		<template v-if="view_btn_add">
 			<div class="container">
@@ -70,8 +70,6 @@
 		}),
 		computed:{
         	view_btn_add(){
-                // console.log('view_btn_add', this.flagChangeView, this.$store.getters['basket/getBasketCountById'](this.id));
-                // console.log( (this.flagChangeView && this.$store.getters['basket/getBasketCountById'](this.id) > 0));
         		return (this.flagChangeView && this.$store.getters['basket/getBasketCountById'](this.id) > 0);
 			},
 			count_book(){
@@ -105,6 +103,8 @@
 	@import "@/assets/variables.scss";
 
 	.control__btn{
+		@include main_font;
+		font-size: 11px;
 		border: none;
 		background: transparent;
 		padding: 0px;
@@ -124,16 +124,16 @@
 		}
 	}
 	.control{
-		border: 1px solid black;
+		/*border: 1px solid black;*/
 		border-radius: 4px;
 		background: $blue-dark;
 		width: 116px;
 		padding: 4px;
-		*{
-			color: $main-color;
+		.container *:not(.material-icons){
+			@include main_font;
 		}
-		*:hover:not(.control__label){
-			color: $gray;
+		*{
+			color: $main-color!important;
 		}
 		&.control_full-width{
 			width: 100%;
@@ -143,6 +143,7 @@
 			justify-content: space-between;
 			align-items: center;
 			.control__btn{
+				border-radius: 2px;
 				display: flex;
 				.material-icons{
 					margin: auto;
@@ -150,4 +151,11 @@
 			}
 		}
 	}
+
+	.control:hover:not(.control_control-count),
+	.control:not(.control_control-to-basket) .control__btn:hover{
+		background: $blue-light;
+	}
+
+
 </style>

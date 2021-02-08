@@ -179,6 +179,8 @@ export default {
 	},
 	methods: {
 
+		//TODO: добавить метод для открытия страницы с информацией товара ???
+
 		book_inc(id){
 			this.$store.commit('basket/add_one_book', id);
 		},
@@ -219,7 +221,7 @@ export default {
 			this.$store.commit('basket/clean_basket');
 			this.modal_clear_close();
 
-			// вернуться в каталог для выбора товара
+			// TODO: вернуться в каталог для выбора товара
 			// setTimeout(()=>{
 			// 	this.$router.push('/');
 			// }, 1500)
@@ -234,6 +236,8 @@ export default {
 
 	/*для всех кнопок в корзине ("в каталог", "очистить корзину")*/
 	.basket .basket__btn{
+		@include main_font;
+		font-size: 11px;
 		cursor: pointer;
 		min-width: 32px;
 		min-height: 28px;
@@ -248,7 +252,8 @@ export default {
 			outline: none;
 		}
 		&:hover{
-			color: $gray;
+			/*<!--color: $gray;-->*/
+			background: $blue-light;
 		}
 	}
 
@@ -347,6 +352,7 @@ export default {
 				margin: 0 8px;
 			}
 			.basket-elem__count{
+				@include main_font;
 				font-size: 18px;
 				width: 40%;
 				height: 100%;
@@ -362,6 +368,9 @@ export default {
 				.btn-control{
 					width: 100%;
 					height: 100%;
+					.material-icons{
+						margin-right: 2px;
+					}
 				}
 			}
 		}
@@ -375,6 +384,7 @@ export default {
 	}
 
 	/*блок с кнопкой "очистить корзину" и сумма корзины*/
+	/*TODO: сместить кнопку относительно центра изображении товаров ???*/
 	.basket-footer{
 		padding: 8px;
 		margin-top: 16px;

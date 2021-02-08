@@ -22,7 +22,7 @@
     <nuxt-link
       class="header__link"
       to="/basket"
-      tag="div"
+      tag="a"
     >
 		<div
 			v-show="basket_count > 0"
@@ -52,33 +52,52 @@
 export default {
 	name: 'TheHeader',
 	data: () => ({
-
+		title: '', // заголовок активной страницы
 	}),
 	computed: {
 		...mapGetters({
 			basket_count: 'basket/getBasketCount'
 		}),
-		title () {
-			console.log(this.$router)
-			const name_route = this.$router.currentRoute.name
-			console.log(name_route)
+	},
+	methods: {
+		update_basket_from_localstorage(){
+			// получаем данные о корзине из localStorage и добавляем средствами хранилища
+			let str = localStorage.getItem('basket');
+			if(str){
+				let arr = JSON.parse(str).slice();
+				for(let i = 0; i < arr.length; i += 1){
+					this.$store.commit('basket/add_book_local_storage', arr[i]);
+				}
+			}
+		},
+		get_currect_title(name_route){
+			// функция вернёт наименование активной страницы по роутеру
+			// console.log(name_route)
 			switch (name_route) {
-			case 'index':
-				return 'Каталог книг'
-			case 'basket':
-				return 'Корзина'
-			case 'about':
-			case 'about_book':
-				return 'Информация о товаре'
-			default:
-				return '------'
+				case 'index':
+					return 'Каталог товаров'
+				case 'basket':
+					return 'Корзина'
+				case 'about':
+				case 'about_book':
+					return 'Информация о товаре'
+				default:
+					return ''
 			}
 		}
 	},
-	methods: {
-
+	beforeMount(){
+		this.title = this.get_currect_title(this.$router.currentRoute.name);
+		this.update_basket_from_localstorage();
+	},
+	watch: {
+		$route(to, from) {
+			// обрабатываем изменение параметров маршрута
+			// TODO: возможно можно вынести в middleware
+			const name_route = to.name;
+			this.title = this.get_currect_title(name_route);
+		}
 	}
-
 }
 </script>
 
@@ -96,6 +115,7 @@ export default {
 		padding: 16px;
 		@include position(sticky);
 		top: 0;
+		z-index: 2;
 		background: $main-color;
 
 		.header__h3 {
@@ -110,7 +130,7 @@ export default {
 			cursor: pointer;
 			color: $blue-dark;
 			text-decoration: none;
-			position: relative;
+			@include position(relative);
 
 			&.nuxt-link-exact-active,
 			&:hover,
@@ -132,7 +152,7 @@ export default {
 				margin: 0px;
 				font-size: 12px;
 				color: $main-color;
-				position: absolute;
+				@include position(absolute);
 				left: unset;
 				right: calc(100% / 2 - 25px);
 				top: -6px;
