@@ -164,7 +164,7 @@ export default {
 		}
 
 		.header__link_logo {
-			width: 150px;
+			width: 160px;
 
 			&.nuxt-link-exact-active,
 			&:hover,
