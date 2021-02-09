@@ -102,6 +102,7 @@ export default {
 		align-items: start;
 		justify-content: start;
 		/*height: 400px;*/
+		min-height: 340px;
 		box-sizing: content-box;
 		@include position(relative);
 

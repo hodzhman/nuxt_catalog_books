@@ -3,11 +3,15 @@
 		<div class="about-book__top">
 			<div class="about-book__image-container image-slider">
 				<img
+					v-if="false"
 					class="about-book__image"
 					:src="'https://www.respublica.ru/'+bookInfo.attributes.image.media.url"
 					:alt="bookInfo.attributes.title"
 					width="100%"
 				>
+				<slider
+					:data="imageBook"
+				></slider>
 			</div>
 			<div class="about-book__info book-info">
 				<div class="book-info__title">
@@ -56,18 +60,20 @@
 
 <script>
 	import BookControl from '@/components/bookControl'
+	import Slider from '@/components/slider';
 	import * as axios from 'axios';
 	import { mapGetters } from 'vuex';
 	import { mapMutations } from 'vuex';
     export default {
         name: "about-book",
 		components:{
-        	BookControl
+        	BookControl,
+			Slider
 		},
 		async asyncData({$http, params}){
         	//TODO: если не правильный SKU книги то ошибка запроса!!! добавить страницу "товар не найден" или запрос вынести в beforeMount
         	let bookInfo = {},
-				imageBook = {},
+				imageBook = [],
 				sku = params.sku;
 			await axios({
 				method: 'get',
@@ -75,9 +81,13 @@
 			})
 				.then(response => {
 					if(response.data){
-						console.log('response.data',response.data);
 						bookInfo = response.data.item.data;
-						imageBook = response.data.images.data;
+						let resp_img = response.data.images.data;
+						for(let key in resp_img){
+							imageBook.push({
+								url: 'https://www.respublica.ru/'+resp_img[key].attributes.media.url
+							});
+						}
 					}
 				})
 				.catch(error => console.error(error));
@@ -199,6 +209,7 @@
 				}
 				.book-info__property-value{
 					font-size: 16px;
+					width: 50%;
 				}
 			}
 
