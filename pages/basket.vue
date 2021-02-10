@@ -280,7 +280,7 @@ export default {
 	.basket-empty{
 		width: 100%;
 		text-align: center;
-		margin: 32px;
+		margin: 32px 0;
 		.basket-empty__title{
 			@include main_font;
 			font-size: 28px;

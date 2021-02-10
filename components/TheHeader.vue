@@ -54,11 +54,6 @@ export default {
 	data: () => ({
 		title: '', // заголовок активной страницы
 	}),
-	computed: {
-		...mapGetters({
-			basket_count: 'basket/getBasketCount'
-		}),
-	},
 	methods: {
 		update_basket_from_localstorage(){
 			// получаем данные о корзине из localStorage и добавляем средствами хранилища
@@ -75,6 +70,7 @@ export default {
 			// console.log(name_route)
 			switch (name_route) {
 				case 'index':
+				case 'catalog':
 					return 'Каталог товаров'
 				case 'basket':
 					return 'Корзина'
@@ -86,9 +82,10 @@ export default {
 			}
 		}
 	},
-	beforeMount(){
-		this.title = this.get_currect_title(this.$router.currentRoute.name);
-		this.update_basket_from_localstorage();
+	computed: {
+		...mapGetters({
+			basket_count: 'basket/getBasketCount'
+		}),
 	},
 	watch: {
 		$route(to, from) {
@@ -97,6 +94,10 @@ export default {
 			const name_route = to.name;
 			this.title = this.get_currect_title(name_route);
 		}
+	},
+	beforeMount(){
+		this.title = this.get_currect_title(this.$router.currentRoute.name);
+		this.update_basket_from_localstorage();
 	}
 }
 </script>
@@ -104,6 +105,7 @@ export default {
 <style scoped lang="scss">
 	@import "@/assets/variables.scss";
 
+	/*родительский тег компонента*/
 	.header {
 		@include main_font();
 
@@ -118,13 +120,15 @@ export default {
 		z-index: 2;
 		background: $main-color;
 
+		/*для тега с названием страницы*/
 		.header__h3 {
-			min-width: 40%;
+			min-width: 15%;
 			text-align: center;
 		}
 
+		/*для ссылок*/
 		.header__link {
-			width: 100px;
+			min-width: 160px;
 			text-align: center;
 			padding: 0 8px;
 			cursor: pointer;
@@ -138,12 +142,14 @@ export default {
 				color: $gray;
 			}
 
+			/*иконки у ссылок*/
 			.header-link__icon {
 				.material-icons {
 					font-size: 32px !important;
 				}
 			}
 
+			/*для тега с кол-вом элементов в корзине*/
 			.header-link__basket-count{
 				background: $blue;
 				border-radius: 50%;
@@ -163,9 +169,8 @@ export default {
 			}
 		}
 
+		/*для элемента "Книжный магазин"*/
 		.header__link_logo {
-			width: 160px;
-
 			&.nuxt-link-exact-active,
 			&:hover,
 			&:active {

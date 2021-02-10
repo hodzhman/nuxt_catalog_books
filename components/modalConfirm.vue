@@ -23,6 +23,8 @@
         name: "modal-confirm",
 		props: {
         	value: {
+				// для v-model
+				// отображать или нет
         		type: Boolean,
 				required: true,
 				default() {
@@ -36,6 +38,7 @@
 <style scoped lang="scss">
 	@import '@/assets/variables.scss';
 
+	/*родительский тег компонента*/
 	.modal-confirm {
 		@include position(fixed);
 		z-index: 9998;
@@ -46,12 +49,16 @@
 		background-color: rgba(0, 0, 0, 0.5);
 		display: none;
 		transition: opacity 0.3s ease;
+
+		/*модификатор активного окна*/
 		&.modal-active{
 			display: table;
 		}
+		/*обертка модального окна*/
 		.modal-wrapper {
 			display: table-cell;
 			vertical-align: middle;
+			/*контейнер для контента окна*/
 			.modal-container {
 				min-width: 300px;
 				background-color: #fff;
@@ -60,6 +67,7 @@
 		}
 	}
 
+	/*тег для контента модального окна*/
 	.modal{
 		width: 500px;
 		margin: auto;
@@ -75,11 +83,11 @@
 		.modal__head{
 			font-size: 18px;
 		}
+		/*кнопки управления*/
 		.modal__actions{
 			display: flex;
 			align-items: center;
 			justify-content: space-evenly;
 		}
 	}
-
 </style>

@@ -8,21 +8,10 @@
 		>
 			<img :src="'https://www.respublica.ru/'+bookInfo.attributes.image.media.url"
 				 :alt="bookInfo.attributes.title"
+				 class="book_img-cover"
 			>
 		</nuxt-link>
     </div>
-
-	  <div class="photo" v-if="false">
-		  <div class="photo-wrapper">
-			  <img
-				  @click="$router.push({name: 'about_book', params: {sku: bookInfo.attributes.sku}})"
-				  :src="'https://www.respublica.ru/'+bookInfo.attributes.image.media.url"
-				  :alt="bookInfo.attributes.title"
-				  class="photo-img"
-			  >
-		  </div>
-	  </div>
-
     <nuxt-link
 		class="book__title"
 		tag="a"
@@ -72,19 +61,9 @@ export default {
 	},
 	computed: {
 		author() {
-			return (this.bookInfo.attributes.manufacturer.title) ? this.bookInfo.attributes.manufacturer.title : '';
-		}
-	},
-	methods: {
-		add_to_basket(){
-			// let book = {
-			// 	id: this.bookInfo.id,
-			// 	title: this.bookInfo.attributes.title,
-			// 	author: this.author,
-			// 	image: this.bookInfo.attributes.image.media.url,
-			// 	price: this.bookInfo.attributes.price,
-			// };
-			// this.$store.commit('basket/add_book', book);
+			// функция для вывода автора
+			// возможно изменить формат на Фамилия И.О , но не у всех записей корректные данные
+			return (this.bookInfo.attributes.manufacturer && this.bookInfo.attributes.manufacturer.title) ? this.bookInfo.attributes.manufacturer.title : '';
 		}
 	}
 }
@@ -92,6 +71,8 @@ export default {
 
 <style lang="scss">
 	@import '@/assets/variables.scss';
+
+	/*элемент товар для каталога*/
 	.book {
 		width: (($container-width / 4) - 16 - 32);
 		padding: 16px;
@@ -106,6 +87,7 @@ export default {
 		box-sizing: content-box;
 		@include position(relative);
 
+		/*тег с изображением книги и ссылкой на страницу информации*/
 		.book__img {
 			cursor: pointer;
 			height: 250px;
@@ -113,12 +95,15 @@ export default {
 			display: flex;
 			padding: 8px;
 			box-sizing: border-box;
+
+			/*тег с ссылкой на страницу информации*/
 			.book__img-link{
 				height: 100%;
 				text-decoration: none;
 				margin: auto;
 			}
-			img {
+			/*изображение*/
+			.book_img-cover {
 				max-height: 100%;
 				max-width: 100%;
 				border-radius: 4px;
@@ -129,12 +114,14 @@ export default {
 			}
 		}
 
+		/*название книги*/
 		.book__title{
 			cursor: pointer;
 			@include main_font();
 			text-decoration: none;
 		}
 
+		/*автор книги*/
 		.book__author{
 			@include main_font();
 			color: $blue;
@@ -142,6 +129,7 @@ export default {
 			margin-bottom: 32px;
 		}
 
+		/*тег для цены и кнопки добавить*/
 		.book__tools {
 			width: calc(100% - 32px);
 			flex-flow: row;
@@ -151,39 +139,21 @@ export default {
 			margin-top: 8px;
 			position: absolute;
 			bottom: 0;
+
+			/*цена книги*/
 			.book__price{
 				@include main_font();
 				font-size: 18px;
 				line-height: 38px;
 			}
+
+			/*кнопка добавить*/
 			.book__add-basket .control{
 				width: 100px;
 			}
 			.book__add-basket *{
 				cursor: pointer;
 				border-radius: 4px;
-			}
-		}
-	}
-
-	.photo{
-		@include position(static);
-		z-index: 1;
-		padding-top: 100%;
-		margin-bottom: 1rem;
-		.photo-wrapper{
-			@include position(absolute);
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			.photo-img{
-				display: block;
-				max-width: 100%;
-				max-height: 100%;
 			}
 		}
 	}

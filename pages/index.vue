@@ -1,26 +1,22 @@
 <template>
-  <div class="catalog">
+  <div class="catalog" v-show="books && books.length > 0">
 	  <div class="catalog__tools">
 		  <div class="catalog__count" v-show="catalog_count.length > 0">
 			  {{catalog_count}}
 		  </div>
 		  <div class="catalog__pagination">
-
+			  <pagination
+				  :pages_info="pagination"
+				  @change_page="go_to_pages"
+			  ></pagination>
 		  </div>
 		  <div class="catalog__sort">
-			  <select class="catalot__sort-select sort-select" v-if="false">
-				  <option v-for="item in sort_value"
-						  :value="item.value"
-						  class="sort-select__option"
-				  >{{item.text}}</option>
-			  </select>
-
 			  <div class="catalog__sort-select select">
 				  <div class="select__active-elem"
 					   :class="[{'select__active-elem_opened': select_view}]"
 					   @click="select_view = !select_view"
 				  >
-					  {{sort_selected.text}} <span class="material-icons">keyboard_arrow_up</span>
+					  {{sort_selected.text | select_filter_text}} <span class="material-icons">keyboard_arrow_up</span>
 				  </div>
 				  <div class="select__values"
 					   v-show="select_view"
@@ -36,49 +32,48 @@
 			  </div>
 		  </div>
 	  </div>
-    <div class="catalog__books-container">
-		<div class="catalog__books">
-			<book
-				v-for="item in books"
-				:key="item.id"
-				:book-info="item"
-			/>
-		</div>
-		<div class="catalog__footer">
-			<button
-				class="catalog__btn-add-book"
-				@click="catalog_add_book"
-			>Показать ещё</button>
-		</div>
-	</div>
+	  <div class="catalog__books-container">
+		  <div class="catalog__books">
+			  <book
+				  v-for="item in books"
+				  :key="item.id"
+				  :book-info="item"
+			  />
+		  </div>
+		  <div class="catalog__footer">
+			  <button
+				  class="catalog__btn-add-book"
+				  @click="catalog_add_book"
+				  v-show="pagination.next"
+			  >Показать ещё</button>
+		  </div>
+	  </div>
   </div>
 </template>
 
 <script>
 import Book from '@/components/book.vue'
 import * as axios from 'axios'
+import Pagination from "../components/pagination";
 export default {
 	components: {
+		Pagination,
 		Book
 	},
 	async asyncData ({ $http }) {
 		let books = [],
 			catalog_count = '',
 			sort_value = [{value: 'default', text: 'по умолчанию'}];
-		console.log(books);
-
 		await axios
 			.get('https://www.respublica.ru/api/v1/listing/knigi')
 			.then((response) => {
-				// console.log(response)
 				if (response) {
-					if(response.data.hasOwnProperty('items') && response.data.items.hasOwnProperty('data') ){
-						books = response.data.items.data;
-					}
-					if(response.data.hasOwnProperty('pagination')){
-						catalog_count = String(response.data.pagination.count) + ' товаров';
-
-					}
+					// if(response.data.hasOwnProperty('items') && response.data.items.hasOwnProperty('data') ){
+					// 	books = response.data.items.data;
+					// }
+					// if(response.data.hasOwnProperty('pagination')){
+					// 	catalog_count = String(response.data.pagination.count) + ' товаров';
+					// }
 					if(response.data.order.hasOwnProperty('available')){
 						let items = response.data.order['available'];
 						for(let key in items){
@@ -90,8 +85,8 @@ export default {
 					}
 				}
 			})
-			.catch(error => console.error(error))
-		console.log( books, catalog_count, sort_value );
+			.catch(error => console.error(error));
+		// console.log( books, catalog_count, sort_value );
 		return { books, catalog_count, sort_value }
 	},
 	data: () => ({
@@ -101,42 +96,105 @@ export default {
 		sort_value: [],
 		sort_selected: {value: 'default', text: 'По умолчанию'},
 		btn_disabled: false,
+		pagination: {}
 	}),
 	head: () => ({
+		// title: 'R° Главная страница'
 		title: 'R° Каталог'
 	}),
 	mounted () {
-		// this.getBooks()
-		// let order_sort = localStorage.getItem('order_sort');
-		// console.log(order_sort)
-		// debugger;
+		let sort = localStorage.getItem('order_sort');
+		if(sort === null || sort === undefined){
+			sort = 'default';
+			localStorage.setItem('order_sort', 'default');
+		}
+		this.sort_selected = this.sort_value.find(x => x.value === sort);
+		// this.$router.redirect({
+		// 	path: '/catalog',
+		// 	params: { sort }
+		// });
+		this.get_books(true, 'https://www.respublica.ru/api/v1/listing/knigi', true);
+	},
+	filters: {
+		select_filter_text(value){
+			if (!value)
+				return '';
+			value = value.toString();
+			return value.charAt(0).toUpperCase() + value.slice(1)
+		}
 	},
 	methods: {
 		select_choose(item){
 			console.log('select_choose ', item);
 			this.sort_selected = JSON.parse(JSON.stringify(item));
-			this.sort_selected.text = this.sort_selected.text[0].toUpperCase() + this.sort_selected.text.slice(1);
-			// this.select_view = false;
+			this.select_view = false;
+			localStorage.setItem('order_sort', item.value);
+			let url = 'https://www.respublica.ru/api/v1/listing/knigi';
+			url += '?page=' + this.pagination.current;
+			url += '&order=' + this.sort_selected.value;
+			this.get_books(true, url);
+		},
+		async get_books(clear = false, url = 'https://www.respublica.ru/api/v1/listing/knigi', flag_first = false){
+			if(flag_first){
+				url += '?page=1';
+				let sort = localStorage.getItem('order_sort');
+				if(sort){
+					url += '&order=' + sort;
+				}
+			}
+			console.log(url);
+			this.$nextTick(() => {
+				this.$nuxt.$loading.start();
+			});
+			await axios(url)
+				.then(response => {
+					console.log(response);
+					if(response.data.hasOwnProperty('items') && response.data.items.hasOwnProperty('data')){
+						if(clear){
+							this.books = response.data.items.data;
+						} else {
+							this.books = this.books.concat(response.data.items.data);
+						}
+					}
+					if(response.data.hasOwnProperty('pagination')){
+						this.catalog_count = String(response.data.pagination.count) + ' товаров';
+						this.pagination = response.data.pagination;
+					}
+					if(flag_first){
+						if(response.data.order.hasOwnProperty('available')){
+							let items = response.data.order['available'];
+							for(let key in items){
+								let text = items[key];
+								if(this.sort_value.find(x => x.value === key) === undefined){
+									this.sort_value.push({value: key, text});
+								}
+							}
+						}
+					}
+					this.$nextTick(() => {
+						this.$nuxt.$loading.finish();
+					});
+				})
+				.catch(error => console.error(error));
+			this.$nextTick(() => {
+				this.$nuxt.$loading.finish();
+			});
 		},
 		async catalog_add_book(){
 			if(this.btn_disabled)
 				return;
 			this.btn_disabled = true;
 			let url = 'https://www.respublica.ru/api/v1/listing/knigi';
-			url += '?page=2';
-			url += '?order=' + this.sort_selected.value;
-			await axios({
-				methods: 'get',
-				url: url
-			})
-				.then(response => {
-					console.log(response);
-					if(response.data.hasOwnProperty('items') && response.data.items.hasOwnProperty('data')){
-						this.books = this.books.concat(response.data.items.data);
-					}
-				})
-				.catch(error => console.error(error));
+			url += '?page=' + this.pagination.next;
+			url += '&order=' + this.sort_selected.value;
+			await this.get_books(false, url);
 			this.btn_disabled = false;
+		},
+		go_to_pages(page_num){
+			let url = 'https://www.respublica.ru/api/v1/listing/knigi';
+			url += '?page=' + page_num;
+			url += '&order=' + this.sort_selected.value;
+			this.get_books(true, url);
 		}
 	}
 }
@@ -147,6 +205,11 @@ export default {
 
 	.catalog{
 		margin-bottom: 32px;
+		.catalog__count,
+		.catalog__pagination,
+		.catalog__sort{
+			min-width: 200px;
+		}
 		.catalog__tools{
 			display: flex;
 			justify-content: space-between;
