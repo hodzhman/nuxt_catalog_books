@@ -99,16 +99,17 @@ export default {
 		return { books, catalog_count, sort_value }
 	},
 	data: () => ({
-		books: [],
-		catalog_count: '',
-		select_view: false,
-		sort_value: [],
-		sort_selected: { value: 'default', text: 'По умолчанию' },
-		btn_disabled: false,
-		pagination: {}
+		books: [], //массив с товаром/книгами
+		catalog_count: '', //колво товаров
+		select_view: false, //отображение списка сортировки
+		sort_value: [], //массив с элементами списка сортирвоки
+		sort_selected: { value: 'default', text: 'По умолчанию' }, //выбранный элемент сортировки
+		btn_disabled: false, //флаг для блокировки отправки лишних запросов
+		pagination: {} //данные для пагинации
 	}),
 	methods: {
 		select_choose (item) {
+			//функция при выборе нового способа сортировки
 			console.log('select_choose ', item)
 			this.sort_selected = JSON.parse(JSON.stringify(item))
 			this.select_view = false
@@ -119,6 +120,12 @@ export default {
 			this.get_books(true, url)
 		},
 		async get_books (clear = false, url = 'https://www.respublica.ru/api/v1/listing/knigi', flag_first = false) {
+			//функция для запроса книг
+			//аргументы:
+			//clear - очищать массив книг или доавблять к уже имеющимся данным
+			//url - путь для запроса
+			//flag_first - запрос выполняется первый раз?
+
 			if (flag_first) {
 				url += '?page=1'
 				let sort = localStorage.getItem('order_sort')
@@ -165,6 +172,7 @@ export default {
 			})
 		},
 		async catalog_add_book () {
+			//обработчик клика на кнопку "показать ещё"
 			if (this.btn_disabled) { return }
 			this.btn_disabled = true
 			let url = 'https://www.respublica.ru/api/v1/listing/knigi'
@@ -174,6 +182,8 @@ export default {
 			this.btn_disabled = false
 		},
 		go_to_pages (page_num) {
+			//функция сработает при смене страницы
+			//см компонент Pagination
 			let url = 'https://www.respublica.ru/api/v1/listing/knigi'
 			url += '?page=' + page_num
 			url += '&order=' + this.sort_selected.value
@@ -182,6 +192,7 @@ export default {
 	},
 	filters: {
 		select_filter_text (value) {
+			//форматирование для выбранного способа сортировки
 			if (!value) { return '' }
 			value = value.toString()
 			return value.charAt(0).toUpperCase() + value.slice(1)

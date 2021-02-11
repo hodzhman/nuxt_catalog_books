@@ -7,8 +7,6 @@
 	 price
 	 count = 1
  *
- *
- *
  * */
 
 function updateLocalStorage (state) {

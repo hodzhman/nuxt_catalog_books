@@ -166,21 +166,23 @@ export default {
 		BookControl
 	},
 	data: () => ({
-		modal_remove_view: false,
-		modal_remove_item: {
+		modal_remove_view: false, //отображение модального окна с удалением книги
+		modal_remove_item: { //данные для модального окна удаления книги
 			id: -1,
 			image: '',
 			title: '',
 			author: ''
 		},
-		modal_clearbasket_view: false
+		modal_clearbasket_view: false //отображение модального окна очистки корзины
 	}),
 	methods: {
 		// TODO: добавить метод для открытия страницы с информацией товара ???
 		book_inc (id) {
+			//добавить одну книгу в корзине по id
 			this.$store.commit('basket/add_one_book', id)
 		},
 		book_dec (id) {
+			//удалить одну книгу из корзины по id
 			let count = this.$store.getters['basket/getBasketCountById'](id)
 			if (count > 1) {
 				this.$store.commit('basket/remove_one_book', id)
@@ -189,10 +191,13 @@ export default {
 			}
 		},
 		book_remove (id) {
+			//удалить книгу из корзины
 			this.$store.commit('basket/remove_book', id)
 		},
 
 		modal_remove_open (id) {
+			//при открытии модального окна подтверждения удаления книги
+			//заполняются данные о книге
 			if (parseInt(id) > 0) {
 				let book = this.all_books.find(x => x.id === parseInt(id))
 				this.modal_remove_item.id = id
@@ -203,17 +208,21 @@ export default {
 			}
 		},
 		modal_remove_close () {
+			//закрытие модал окна удаления книги
 			this.modal_remove_view = false
 		},
 		modal_remove_accept () {
+			//если пользователь согласился удалить книгу
 			this.book_remove(this.modal_remove_item.id)
 			this.modal_remove_close()
 		},
 
 		modal_clear_close () {
+			//открытие модал окна очистки корзины
 			this.modal_clearbasket_view = false
 		},
 		modal_clear_accept () {
+			//подтверждение очистки корзины
 			this.$store.commit('basket/clean_basket')
 			this.modal_clear_close()
 
@@ -228,6 +237,7 @@ export default {
 			all_books: 'basket/getBasket'
 		}),
 		sum_total () {
+			//свойство вернёт сумму всей корзины с учетом кол-ва каждого товара
 			let result = 0
 			for (let i = 0; i < this.all_books.length; i += 1) {
 				let item = this.all_books[i]

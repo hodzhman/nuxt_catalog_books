@@ -4,8 +4,6 @@ export const state = () => ({
 
 export const mutations = {
 	increment (state) {
-		console.log('store::increment')
 		state.counter++
-		console.log(state.counter)
 	}
 }
