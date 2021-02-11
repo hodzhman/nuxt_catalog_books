@@ -62,6 +62,11 @@
 </template>
 
 <script>
+	/**
+	 *
+	 * 		файл не используется
+	 *
+	 * */
 import Book from '@/components/book.vue'
 import * as axios from 'axios'
 export default {
