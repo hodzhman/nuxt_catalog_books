@@ -36,6 +36,7 @@
 		/* width: 100vw; */
 		overflow: auto;
 		background: $main-color;
+
 		@include scrollbars(5px, gray);
 	}
 

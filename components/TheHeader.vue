@@ -24,10 +24,12 @@
       to="/basket"
       tag="a"
     >
-		<div
-			v-show="basket_count > 0"
-			class="header-link__basket-count"
-		>{{ (basket_count < 10) ? basket_count : '+9' }}</div>
+      <div
+        v-show="basket_count > 0"
+        class="header-link__basket-count"
+      >
+        {{ (basket_count < 10 ? basket_count : '+9') }}
+      </div>
       <div class="header-link__icon">
         <span class="material-icons">shopping_cart</span>
       </div>
@@ -48,56 +50,56 @@
 </template>
 
 <script>
-	import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 export default {
 	name: 'TheHeader',
 	data: () => ({
-		title: '', // заголовок активной страницы
+		title: '' // заголовок активной страницы
 	}),
 	methods: {
-		update_basket_from_localstorage(){
+		update_basket_from_localstorage () {
 			// получаем данные о корзине из localStorage и добавляем средствами хранилища
-			let str = localStorage.getItem('basket');
-			if(str){
-				let arr = JSON.parse(str).slice();
-				for(let i = 0; i < arr.length; i += 1){
-					this.$store.commit('basket/add_book_local_storage', arr[i]);
+			let str = localStorage.getItem('basket')
+			if (str) {
+				let arr = JSON.parse(str).slice()
+				for (let i = 0; i < arr.length; i += 1) {
+					this.$store.commit('basket/add_book_local_storage', arr[i])
 				}
 			}
 		},
-		get_currect_title(name_route){
+		get_currect_title (name_route) {
 			// функция вернёт наименование активной страницы по роутеру
 			// console.log(name_route)
 			switch (name_route) {
-				case 'index':
-				case 'catalog':
-					return 'Каталог товаров'
-				case 'basket':
-					return 'Корзина'
-				case 'about':
-				case 'about_book':
-					return 'Информация о товаре'
-				default:
-					return ''
+			case 'index':
+			case 'catalog':
+				return 'Каталог товаров'
+			case 'basket':
+				return 'Корзина'
+			case 'about':
+			case 'about_book':
+				return 'Информация о товаре'
+			default:
+				return ''
 			}
 		}
 	},
 	computed: {
 		...mapGetters({
 			basket_count: 'basket/getBasketCount'
-		}),
+		})
 	},
 	watch: {
-		$route(to, from) {
+		$route (to, from) {
 			// обрабатываем изменение параметров маршрута
 			// TODO: возможно можно вынести в middleware
-			const name_route = to.name;
-			this.title = this.get_currect_title(name_route);
+			let name_route = to.name
+			this.title = this.get_currect_title(name_route)
 		}
 	},
-	beforeMount(){
-		this.title = this.get_currect_title(this.$router.currentRoute.name);
-		this.update_basket_from_localstorage();
+	beforeMount () {
+		this.title = this.get_currect_title(this.$router.currentRoute.name)
+		this.update_basket_from_localstorage()
 	}
 }
 </script>
@@ -105,7 +107,7 @@ export default {
 <style scoped lang="scss">
 	@import "@/assets/variables.scss";
 
-	/*родительский тег компонента*/
+	/* родительский тег компонента */
 	.header {
 		@include main_font();
 
@@ -115,18 +117,20 @@ export default {
 		align-items: center;
 		justify-content: space-between;
 		padding: 16px;
+
 		@include position(sticky);
+
 		top: 0;
 		z-index: 2;
 		background: $main-color;
 
-		/*для тега с названием страницы*/
+		/* для тега с названием страницы */
 		.header__h3 {
 			min-width: 15%;
 			text-align: center;
 		}
 
-		/*для ссылок*/
+		/* для ссылок */
 		.header__link {
 			min-width: 160px;
 			text-align: center;
@@ -134,6 +138,7 @@ export default {
 			cursor: pointer;
 			color: $blue-dark;
 			text-decoration: none;
+
 			@include position(relative);
 
 			&.nuxt-link-exact-active,
@@ -142,23 +147,25 @@ export default {
 				color: $gray;
 			}
 
-			/*иконки у ссылок*/
+			/* иконки у ссылок */
 			.header-link__icon {
 				.material-icons {
 					font-size: 32px !important;
 				}
 			}
 
-			/*для тега с кол-вом элементов в корзине*/
-			.header-link__basket-count{
+			/* для тега с кол-вом элементов в корзине */
+			.header-link__basket-count {
 				background: $blue;
 				border-radius: 50%;
 				width: 18px;
 				height: 18px;
-				margin: 0px;
+				margin: 0;
 				font-size: 12px;
 				color: $main-color;
+
 				@include position(absolute);
+
 				left: unset;
 				right: calc(100% / 2 - 25px);
 				top: -6px;
@@ -169,7 +176,7 @@ export default {
 			}
 		}
 
-		/*для элемента "Книжный магазин"*/
+		/* для элемента "Книжный магазин" */
 		.header__link_logo {
 			&.nuxt-link-exact-active,
 			&:hover,

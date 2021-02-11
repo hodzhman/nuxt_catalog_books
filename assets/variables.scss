@@ -20,7 +20,7 @@ $container-width: 960px;
 	color: $blue-dark;
 }
 
-@mixin position($pos){
+@mixin position($pos) {
 	-webkit-position: $pos;
 	-moz-position: $pos;
 	-ms-position: $pos;

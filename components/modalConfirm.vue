@@ -1,46 +1,48 @@
 <template>
-    <div class="modal-confirm"
-		 :class="value ? 'modal-active' : ''"
-	>
-		<div class="modal-wrapper">
-			<div class="modal-container modal">
-				<div class="modal__head">
-					<slot name="head"></slot>
-				</div>
-				<div class="modal__body">
-					<slot name="body"></slot>
-				</div>
-				<div class="modal__actions">
-					<slot name="actions"></slot>
-				</div>
-			</div>
-		</div>
-	</div>
+  <div
+    class="modal-confirm"
+    :class="value ? 'modal-active' : ''"
+  >
+    <div class="modal-wrapper">
+      <div class="modal-container modal">
+        <div class="modal__head">
+          <slot name="head" />
+        </div>
+        <div class="modal__body">
+          <slot name="body" />
+        </div>
+        <div class="modal__actions">
+          <slot name="actions" />
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "modal-confirm",
-		props: {
+export default {
+	name: 'ModalConfirm',
+	props: {
         	value: {
 				// для v-model
 				// отображать или нет
-        		type: Boolean,
+				type: Boolean,
 				required: true,
-				default() {
-        			return false;
+				default () {
+						return false
 				}
 			}
 		}
-    }
+	}
 </script>
 
 <style scoped lang="scss">
 	@import '@/assets/variables.scss';
 
-	/*родительский тег компонента*/
+	/* родительский тег компонента */
 	.modal-confirm {
 		@include position(fixed);
+
 		z-index: 9998;
 		top: 0;
 		left: 0;
@@ -50,15 +52,17 @@
 		display: none;
 		transition: opacity 0.3s ease;
 
-		/*модификатор активного окна*/
-		&.modal-active{
+		/* модификатор активного окна */
+		&.modal-active {
 			display: table;
 		}
-		/*обертка модального окна*/
+
+		/* обертка модального окна */
 		.modal-wrapper {
 			display: table-cell;
 			vertical-align: middle;
-			/*контейнер для контента окна*/
+
+			/* контейнер для контента окна */
 			.modal-container {
 				min-width: 300px;
 				background-color: #fff;
@@ -67,24 +71,28 @@
 		}
 	}
 
-	/*тег для контента модального окна*/
-	.modal{
+	/* тег для контента модального окна */
+	.modal {
 		width: 500px;
 		margin: auto;
 		border-radius: 4px;
 		padding: 16px;
 		border: none;
 		box-sizing: border-box;
+
 		@include main_font;
+
 		.modal__head,
-		.modal__body{
+		.modal__body {
 			padding: 0 0 8px 0;
 		}
-		.modal__head{
+
+		.modal__head {
 			font-size: 18px;
 		}
-		/*кнопки управления*/
-		.modal__actions{
+
+		/* кнопки управления */
+		.modal__actions {
 			display: flex;
 			align-items: center;
 			justify-content: space-evenly;

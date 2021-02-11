@@ -55,7 +55,7 @@ export default {
 	},
 
 	router: {
-		extendRoutes(routes, resolve) {
+		extendRoutes (routes, resolve) {
 			routes.push({
 				name: 'about_book',
 				path: '/about/about_book/:sku',
